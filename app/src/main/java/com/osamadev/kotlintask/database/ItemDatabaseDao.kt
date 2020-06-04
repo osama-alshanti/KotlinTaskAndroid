@@ -18,10 +18,13 @@ interface ItemDatabaseDao {
     @Query("SELECT * from task_table WHERE id = :key")
     fun get(key: Long): Item?
 
+    @Query("UPDATE task_table SET flag = :flag WHERE id = :id")
+    fun updateItem(id: Long, flag: Boolean?): Int
+
     @Query("DELETE FROM task_table")
     fun clear()
 
-    @Query("SELECT * FROM task_table ORDER BY id DESC")
+    @Query("SELECT * FROM task_table ORDER BY id")
     fun getAllItems(): LiveData<List<Item>>
 
 

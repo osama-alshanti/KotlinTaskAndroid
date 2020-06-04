@@ -32,25 +32,16 @@ class MainVM(private val id: Long = 0L, val database: ItemDatabaseDao) : ViewMod
     private val uiScope: CoroutineScope = CoroutineScope(Dispatchers.Main +  viewModelJob)
 
 
-    val items = database.getAllItems()
 
 
-    /*
-       val item1 = Item(-1,"1st item","one")
-        val item2 = Item(-1,"2nd item","two")
-        val item3 = Item(-1,"3rd item","three")
-        val item4 = Item(-1,"4th item","four")
-        val item5 = Item(-1,"5th item","five")
-
-        viewModel.insert(item1)
-        viewModel.insert(item2)
-        viewModel.insert(item3)
-        viewModel.insert(item4)
-        viewModel.insert(item5)
-*/
 
     private val _navigateToSecondActivity =  MutableLiveData<Boolean?>()
     val navigateToSecondActivity: LiveData<Boolean?> get() = _navigateToSecondActivity
+
+
+    val items = database.getAllItems()
+
+
 
     fun doneNavigating() {
         _navigateToSecondActivity.value = null
@@ -66,14 +57,28 @@ class MainVM(private val id: Long = 0L, val database: ItemDatabaseDao) : ViewMod
 
     }
 
+
+
+
+
     fun insertItem() {
         uiScope.launch {
-            for (item in 1..5){
-                val item = Item()
-                insert(item)
-            }
+            insert(Item(0, "Osama Alshanti","Software engineer",false))
+            insert(Item(0, "Ali ahmed ","Freelancer",false))
+            insert(Item(0, "Mohammed Ahmed ","Software engineer",false))
+            insert(Item(0, "Osama Alshanti","Freelancer",false))
+            insert(Item(0, "Mohammed Ahmed","Software engineer",false))
         }
     }
+
+    fun updateItem(id: Long,flag:Boolean){
+    uiScope.launch {
+        updateById(id,flag)
+    }
+
+    }
+
+
 
     private suspend fun insert(item: Item){
         withContext(Dispatchers.IO) {
@@ -81,13 +86,23 @@ class MainVM(private val id: Long = 0L, val database: ItemDatabaseDao) : ViewMod
         }
     }
 
+    private suspend fun updateById(id: Long,flag:Boolean){
+        withContext(Dispatchers.IO) {
+            database.updateItem(id,flag)
+        }
+    }
+
+    private suspend fun update(item: Item) {
+        withContext(Dispatchers.IO) {
+            database.update(item)
+        }
+    }
 
     suspend fun clear() {
         withContext(Dispatchers.IO) {
             database.clear()
         }
     }
-
 
 
 

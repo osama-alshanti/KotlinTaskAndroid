@@ -20,14 +20,20 @@ package com.osamadev.kotlintask.database
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.*
 
 @Entity(tableName = "task_table")
 data class Item (
         @PrimaryKey(autoGenerate = true)
-        val id: Long = 0L,
+        val id: Long ,
         @ColumnInfo(name = "title")
-        val title: String = "${id}item",
+        val title: String,
         @ColumnInfo(name = "description")
-        val description: String = "desc")
+        val description: String,
+        @ColumnInfo(name = "flag")
+        val flag: Boolean
+){
+        constructor():this(0,"","",false)
+}
 
 
