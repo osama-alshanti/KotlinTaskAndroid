@@ -55,8 +55,7 @@ class MainActivity : AppCompatActivity() {
             list.addAll(items)
             itemAdapter!!.notifyDataSetChanged()
         })
-
-
+        
     }
 
     private fun insertAllItems(){

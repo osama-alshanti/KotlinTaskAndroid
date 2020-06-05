@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.osamadev.kotlintask.adapter.ItemAdapter
 
-@Database(entities = [Item::class], version = 1,  exportSchema = false)
+@Database(entities = [Item::class], version = 16,  exportSchema = false)
 abstract class ItemDatabase: RoomDatabase() {
 
     abstract val itemDatabaseDao: ItemDatabaseDao
