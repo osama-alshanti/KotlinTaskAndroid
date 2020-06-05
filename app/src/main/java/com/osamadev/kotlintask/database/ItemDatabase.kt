@@ -4,8 +4,9 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.osamadev.kotlintask.adapter.ItemAdapter
 
-@Database(entities = [Item::class], version = 6,  exportSchema = false)
+@Database(entities = [Item::class], version = 1,  exportSchema = false)
 abstract class ItemDatabase: RoomDatabase() {
 
     abstract val itemDatabaseDao: ItemDatabaseDao
@@ -22,7 +23,7 @@ abstract class ItemDatabase: RoomDatabase() {
 
                 if (instance == null) {
                     instance = Room.databaseBuilder(context.applicationContext, ItemDatabase::class.java,
-                        "sleep_history_database").fallbackToDestructiveMigration().build()
+                        "task-database").fallbackToDestructiveMigration().build()
                     INSTANCE = instance
 
                 }

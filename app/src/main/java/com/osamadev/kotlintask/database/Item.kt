@@ -22,18 +22,21 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.*
 
+
 @Entity(tableName = "task_table")
 data class Item (
         @PrimaryKey(autoGenerate = true)
-        val id: Long ,
+        val id: Long,
         @ColumnInfo(name = "title")
-        val title: String,
+        var title: String,
         @ColumnInfo(name = "description")
-        val description: String,
+        var description: String,
         @ColumnInfo(name = "flag")
-        val flag: Boolean
-){
+        var flag: Boolean){
+
+
         constructor():this(0,"","",false)
+
 }
 
 

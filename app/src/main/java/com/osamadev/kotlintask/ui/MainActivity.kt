@@ -23,43 +23,48 @@ class MainActivity : AppCompatActivity() {
 
 
     private val TAG = "MainActivity"
-
+    private var itemAdapter: ItemAdapter? = null
+    private lateinit var viewModel:MainVM
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val dataSource = ItemDatabase.getInstance(getApplication()).itemDatabaseDao
-        val viewModelFactory = ViewModelFactory(-1, dataSource)
+        val viewModelFactory = ViewModelFactory(dataSource)
 
-        val viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainVM::class.java)
-
+         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MainVM::class.java)
 
         val list: MutableList<Item> = ArrayList()
 
-        viewModel.items.observe(this, Observer {items ->
+        item_list.layoutManager = LinearLayoutManager(applicationContext)
+        itemAdapter = ItemAdapter(list)
+        item_list.adapter = itemAdapter
 
-            for (item in items){
-                Log.i("TaskFragment","Id : ${item.id} Name : ${item.title} , Phone ${item.description}")
+
+
+        viewModel.getAllItems().observe(this, Observer { items ->
+
+            if (items.isEmpty()) {
+                insertAllItems()
+            }
+
+            for (item in items) {
+                Log.i(TAG, "Id : ${item.id} Name : ${item.title} , Flag ${item.flag}")
             }
             list.addAll(items)
-
+            itemAdapter!!.notifyDataSetChanged()
         })
 
-        viewModel.updateItem(0,true)
 
+    }
 
-        item_list.apply {
-            layoutManager = LinearLayoutManager(applicationContext)
-            adapter = ItemAdapter(list,applicationContext)
-        }
-
-
-
-
-
-
-
+    private fun insertAllItems(){
+        viewModel.insertItem(Item(0, "Osama Alshanti", "Software engineer", true))
+        viewModel.insertItem(Item(0, "Ali ahmed ", "Freelancer", false))
+        viewModel.insertItem(Item(0, "Mohammed Ahmed", "Software engineer", false))
+        viewModel.insertItem(Item(0, "Osama Alshanti", "Freelancer", false))
+        viewModel.insertItem(Item(0, "Mohammed Ahmed ", "Software engineer", false))
     }
 
 }

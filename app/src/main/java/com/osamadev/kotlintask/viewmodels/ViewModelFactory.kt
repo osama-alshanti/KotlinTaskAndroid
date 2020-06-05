@@ -22,11 +22,11 @@ import com.example.android.devbyteviewer.viewmodels.MainVM
 import com.osamadev.kotlintask.database.ItemDatabaseDao
 
 
-class ViewModelFactory(private val id: Long, private val dataSource: ItemDatabaseDao): ViewModelProvider.Factory {
+class ViewModelFactory(private val dataSource: ItemDatabaseDao): ViewModelProvider.Factory {
     @Suppress("unchecked_cast")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainVM::class.java)) {
-            return MainVM(id, dataSource) as T
+            return MainVM(dataSource) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

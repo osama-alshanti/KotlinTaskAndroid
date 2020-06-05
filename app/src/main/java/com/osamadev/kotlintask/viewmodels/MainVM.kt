@@ -25,72 +25,62 @@ import com.osamadev.kotlintask.database.ItemDatabaseDao
 import kotlinx.coroutines.*
 
 
-class MainVM(private val id: Long = 0L, val database: ItemDatabaseDao) : ViewModel() {
+class MainVM(val database: ItemDatabaseDao) : ViewModel() {
 
     private val TAG = "MainVM"
     private var viewModelJob = Job()
-    private val uiScope: CoroutineScope = CoroutineScope(Dispatchers.Main +  viewModelJob)
+    private val uiScope: CoroutineScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
 
+    private var getAllItems: LiveData<List<Item>>? = null
+
+    private val _navigateToFirstActivity = MutableLiveData<Boolean?>()
+    val navigateToFirstActivity: LiveData<Boolean?> get() = _navigateToFirstActivity
+
+    init {
+        Log.v(TAG, "start VM ..")
+        getAllItems = database.getAllItems()
+    }
 
 
-
-    private val _navigateToSecondActivity =  MutableLiveData<Boolean?>()
-    val navigateToSecondActivity: LiveData<Boolean?> get() = _navigateToSecondActivity
-
-
-    val items = database.getAllItems()
-
-
+    fun getAllItems(): LiveData<List<Item>> {
+        return getAllItems!!
+    }
 
     fun doneNavigating() {
-        _navigateToSecondActivity.value = null
+        _navigateToFirstActivity.value = null
     }
 
     fun onClose() {
-        _navigateToSecondActivity.value = true
-    }
-
-    init {
-        insertItem()
-        Log.v(TAG,"start VM ")
-
+        _navigateToFirstActivity.value = true
     }
 
 
-
-
-
-    fun insertItem() {
+    fun insertItem(item: Item) {
         uiScope.launch {
-            insert(Item(0, "Osama Alshanti","Software engineer",false))
-            insert(Item(0, "Ali ahmed ","Freelancer",false))
-            insert(Item(0, "Mohammed Ahmed ","Software engineer",false))
-            insert(Item(0, "Osama Alshanti","Freelancer",false))
-            insert(Item(0, "Mohammed Ahmed","Software engineer",false))
+            insert(item)
         }
     }
 
-    fun updateItem(id: Long,flag:Boolean){
-    uiScope.launch {
-        updateById(id,flag)
+    fun updateFlag(item: Item) {
+        uiScope.launch {
+            update(item)
+        }
     }
 
+
+    private suspend fun getItem(id: Long) {
+        withContext(Dispatchers.IO) {
+            database.get(id)
+        }
     }
 
-
-
-    private suspend fun insert(item: Item){
+    private suspend fun insert(item: Item) {
         withContext(Dispatchers.IO) {
             database.insert(item)
         }
     }
 
-    private suspend fun updateById(id: Long,flag:Boolean){
-        withContext(Dispatchers.IO) {
-            database.updateItem(id,flag)
-        }
-    }
 
     private suspend fun update(item: Item) {
         withContext(Dispatchers.IO) {
@@ -103,9 +93,6 @@ class MainVM(private val id: Long = 0L, val database: ItemDatabaseDao) : ViewMod
             database.clear()
         }
     }
-
-
-
 
 
     override fun onCleared() {

@@ -13,37 +13,37 @@ import com.osamadev.kotlintask.R
 import com.osamadev.kotlintask.database.Item
 import com.osamadev.kotlintask.ui.SecondActivity
 
-class ItemAdapter(val list: List<Item>,private val context: Context): RecyclerView.Adapter<ItemViewHolder>() {
-
-    private val inflater: LayoutInflater
-
-    init{
-        inflater = LayoutInflater.from(context)
-    }
+class ItemAdapter(private val listItems: List<Item>): RecyclerView.Adapter<ItemViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        val view:View = inflater.inflate(R.layout.list_item , parent,false)
+        val view:View = LayoutInflater.from(parent.context).inflate(R.layout.list_item , parent,false)
         return ItemViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        val list: Item = list[position]
-        holder.bind(list)
 
-        holder.setItemClickListener(ItemClickListener{ View, position, isLongClick ->
-            if(list.flag && list.id.toInt() == 0){
-                val myIntent = Intent(holder.itemView.context, SecondActivity::class.java)
-                myIntent.putExtra("id",list.id)
-                myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                holder.itemView.context.startActivity(myIntent)
-            }
+            val list:Item = listItems[position]
+            holder.bind(list)
 
-        })
+
+            holder.setItemClickListener(ItemClickListener{ View, position, isLongClick ->
+                if(list.flag){
+                    val myIntent = Intent(holder.itemView.context, SecondActivity::class.java)
+                    myIntent.putExtra("id",listItems.get(1).id.toInt())
+                    myIntent.putExtra("title",listItems.get(1).title)
+                    myIntent.putExtra("desc",listItems.get(1).description)
+                    myIntent.putExtra("flag",listItems.get(1).flag)
+                    myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    holder.itemView.context.startActivity(myIntent)
+                }
+
+            })
+
 
     }
 
 
-    override fun getItemCount(): Int = list.size
+    override fun getItemCount(): Int = listItems.size
 
 }
 
@@ -75,7 +75,7 @@ class ItemViewHolder(itemView:View): RecyclerView.ViewHolder(itemView),View.OnCl
     fun bind(item: Item) {
         txtTitle?.text = item.title
         txtDesc?.text = item.description
-        txtId?.text = item.id.toString()
+        txtId?.text = "#"+item.id.toString()
     }
 
 }

@@ -1,19 +1,19 @@
 package com.osamadev.kotlintask.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 
 @Dao
 interface ItemDatabaseDao {
 
     @Insert
-    fun insert(night: Item)
+    fun insert(item: Item)
 
     @Update
-    fun update(night: Item)
+    fun update(item: Item)
+
+    @Delete
+    fun delete(item: Item)
 
     @Query("SELECT * from task_table WHERE id = :key")
     fun get(key: Long): Item?
@@ -30,5 +30,8 @@ interface ItemDatabaseDao {
 
     @Query("SELECT * from task_table WHERE id = :key")
     fun getItemWithId(key: Long): LiveData<Item>
+
+    @Query("SELECT * FROM task_table ORDER BY id DESC LIMIT 1")
+    fun getItem(): Item?
 
 }
